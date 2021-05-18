@@ -144,15 +144,17 @@ include "connection.php";
 
                         <div class="form-group col-md-4">
                             <label class="form-control-label" for="state">State</label>
-                            <select class="form-control" name="state" id="state_id">
-                            <option value="">Default select</option>
-                            </select>
-                            <label id="error-state"></label>
+                            <div id="state">
+                              <select onchange="change_city()" class="form-control" name="state" id="state_id">
+                              <option value="">Default select</option>
+                              </select>
+                              <label id="error-state"></label>
+                            </div>
                         </div>
 
                         <div class="form-group col-md-4">
                             <label class="form-control-label" for="city_id">City</label>
-                            <div class="state">
+                            <div id="city">
                               <select class="form-control" name="city" id="city_id">
                               <option value="">Default select</option>
                               </select>
