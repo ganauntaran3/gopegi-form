@@ -132,7 +132,7 @@ include "connection.php";
                                 class="form-control"
                                 name="country"
                                 >
-                                <option value="">Choose...</option>
+                                <option selected value="">Choose...</option>
                             </select>
                             <label id="error-country"></label>
                         </div>
