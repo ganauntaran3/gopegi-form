@@ -1,156 +1,141 @@
-// const createTemplate = (obj = []) => {
-//   const innerDiv = document.createElement('div')
-//   const list = document.createElement('ul')
+const citiesSelectElement = document.getElementById('cities')
+const countriesSelectElement = document.getElementById('countries')
+const ctaElement = document.getElementById('cta')
+const statesSelectElement = document.getElementById('states')
 
-//   // styling inner div
-//   innerDiv.classList.add('inner')
-//   innerDiv.setAttribute('role', 'listbox')
-//   innerDiv.setAttribute('aria-expanded', 'false')
-//   innerDiv.setAttribute('tabindex', '-1')
-//   innerDiv.style.maxHeight = '214.667px'
-//   innerDiv.style.minHeight = '0px'
-//   innerDiv.style.overflowY = 'auto'
+const URL_AJAX_REQUEST_CITIES = 'ajax/request_cities.php'
+const URL_AJAX_REQUEST_COUNTRIES = 'ajax/request_countries.php'
+const URL_AJAX_REQUEST_STATES = 'ajax/request_states.php'
 
-//   // styling list
-//   list.classList.add('dropdown-menu')
-//   list.classList.add('inner')
-//   list.classList.add('show')
+const createContactService = (url, content) => {
+	const contactServiceBtn = document.createElement('a')
 
-//   list.innerHTML = `` // reset value
+	contactServiceBtn.className = 'btn btn-light'
+	contactServiceBtn.href = url
+	contactServiceBtn.id = 'contact-service'
+	contactServiceBtn.innerText = content
+	contactServiceBtn.type = 'button'
 
-//   obj.map(({ id, name }) => {
-//     list.innerHTML += `
-//       <li>
-//           <a 
-//           role="option" 
-//           class="dropdown-item" 
-//           aria-disabled="false" 
-//           tabindex="0" 
-//           aria-selected="false">
-//           <span class="text">${name}</span>
-//           </a>
-//       </li>
-//       `
-//   })
-
-//   innerDiv.appendChild(list)
-
-//   return innerDiv
-// }
-
-// function listOnClickListener(innerContainer, option) {
-//   innerContainer
-//     .querySelectorAll('div.inner > ul.inner > li')
-//     .forEach((item) => {
-//       item.addEventListener('click', () => {
-//         innerContainer
-//           .querySelector('div.inner')
-//           .setAttribute('aria-expanded', false)
-//         innerContainer.classList.remove('show')
-//         innerContainer.previousElementSibling.setAttribute(
-//           'aria-expanded',
-//           false
-//         )
-//         innerContainer.previousElementSibling.querySelector(
-//           '.filter-option .filter-option-inner .filter-option-inner-inner'
-//         ).textContent = item.textContent
-//         innerContainer.parentNode.classList.remove('show')
-
-//         const selected = option.data.find((d) => {
-//           return (
-//             item.querySelector('.dropdown-item .text').textContent === d.name
-//           )
-//         })
-
-//         innerContainer.parentNode.querySelector('select').value = selected.id
-
-//         option.callback()
-//       })
-//     })
-// }
-
-async function change_state() {
-  const xhr = new XMLHttpRequest()
-  const countryId = document.getElementById('country_id').value
-
-  const res = await fetch('./except.json')
-  const banned = await res.json()
-  const cta = document.getElementById('cta')
-
-  if (banned.countries.includes(+countryId)) {
-    const contactBtn = document.createElement('a')
-    const submitBtn = cta.querySelector('button[type=submit]')
-
-    contactBtn.href = 'https://t.me/contactName?text=Hello' // link ke telegram
-    contactBtn.className = 'btn btn-primary mr-3'
-    contactBtn.textContent = 'Please contact Corporate Secretary' // caption buttonnya
-
-    submitBtn.setAttribute('disabled', true)
-
-    cta.innerHTML = contactBtn.outerHTML
-    cta.innerHTML += submitBtn.outerHTML
-
-    return
-  } else {
-    const contactBtn = cta.querySelector('a')
-
-    if (cta.contains(contactBtn)) contactBtn.remove()
-  }
-
-  xhr.open('GET', `ajax/ajax_get_state.php?country=${countryId}`, false)
-
-  xhr.onreadystatechange = function () {
-    if (this.readyState === 4 && this.status === 200) {
-      const container = document.getElementById('state')
-      const innerContainer = container.querySelector(
-        '.dropdown > div.dropdown-menu[role=combobox]'
-      )
-      const innerSelect = container.querySelector('#state_id')
-      const states = JSON.parse(this.responseText)
-      const template = createTemplate(states)
-
-      innerSelect.innerHTML = states.map(
-        ({ id, name }) => `<option value="${id}">${name}</div>`
-      )
-      innerContainer.innerHTML = template.outerHTML
-
-      listOnClickListener(innerContainer, {
-        callback: change_city,
-        data: states,
-      })
-    }
-  }
-
-  xhr.send()
+	return contactServiceBtn
 }
 
-function change_city() {
-  const xhr = new XMLHttpRequest()
-  const stateId = document.getElementById('state_id').value
-
-  xhr.open('GET', `ajax/ajax_get_city.php?state=${stateId}`, false)
-
-  xhr.onreadystatechange = function () {
-    if (this.readyState === 4 && this.status === 200) {
-      const container = document.querySelector('#city')
-      const innerContainer = container.querySelector(
-        '.dropdown > div.dropdown-menu[role=combobox]'
-      )
-      const innerSelect = container.querySelector('#city_id')
-      const cities = JSON.parse(this.responseText)
-      const template = createTemplate(cities)
-
-      innerSelect.innerHTML = cities.map(
-        ({ id, name }) => `<option value="${id}">${name}</div>`
-      )
-      innerContainer.innerHTML = template.outerHTML
-
-      listOnClickListener(innerContainer, {
-        callback: () => {},
-        data: cities,
-      })
-    }
-  }
-
-  xhr.send()
+// Function for creating option boilerplate
+const createOption = (value, content) => {
+	return `<option value="${value}">${content}</option>`
 }
+
+// Function for fetching countries list
+const fetchCountries = () => {
+	return new Promise(async (resolve, reject) => {
+		const data = await fetch(URL_AJAX_REQUEST_COUNTRIES)
+
+		if (data.status === 200 || data.ok) {
+			const { countries } = await data.json()
+			return resolve(countries)
+		}
+
+		return reject({
+			error: true,
+			message: 'Failed to fetch countries!',
+		})
+	})
+}
+
+// Function for fetching cities list
+const fetchCities = stateId => {
+	return new Promise(async (resolve, reject) => {
+		const data = await fetch(URL_AJAX_REQUEST_CITIES, {
+			method: 'post',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
+			body: `state_id=${stateId}`,
+		})
+
+		if (data.status === 200 || data.ok) {
+			const { cities } = await data.json()
+			return resolve(cities)
+		}
+
+		return reject({
+			error: true,
+			message: 'Failed to fetch cities!',
+		})
+	})
+}
+
+// Function for fetching states list
+const fetchStates = countryId => {
+	return new Promise(async (resolve, reject) => {
+		const data = await fetch(URL_AJAX_REQUEST_STATES, {
+			method: 'post',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
+			body: `country_id=${countryId}`,
+		})
+
+		if (data.status === 200 || data.ok) {
+			const { states } = await data.json()
+			return resolve(states)
+		}
+
+		return reject({
+			error: true,
+			message: 'Failed to fetch states!',
+		})
+	})
+}
+
+const addContactServiceBtn = () => {
+	const contactBtn = createContactService(
+		'https://t.me/Gana_11',
+		'Please Contact'
+	)
+
+	if (ctaElement.contains(contactBtn)) {
+		ctaElement.removeChild(contactBtn)
+	}
+
+	ctaElement.prepend(contactBtn)
+	ctaElement.querySelector('button[type=submit]').setAttribute('disabled', true)
+}
+
+const removeContactServiceBtn = () => {
+	const contactBtn = ctaElement.querySelector('#contact-service')
+
+	if (ctaElement.contains(contactBtn)) {
+		ctaElement.removeChild(contactBtn)
+	}
+
+	ctaElement.querySelector('button[type=submit]').removeAttribute('disabled')
+}
+
+// Immediately Invoked Function Expression
+;(async () => {
+	const countries = await fetchCountries()
+	const blackLists = await (await fetch('except.json')).json()
+
+	countriesSelectElement.innerHTML = countries.map(country => {
+		return createOption(country.id, country.name)
+	})
+
+	countriesSelectElement.addEventListener('change', async function () {
+		if (blackLists.countries.includes(+this.value)) addContactServiceBtn()
+		else removeContactServiceBtn()
+
+		const states = await fetchStates(this.value)
+
+		statesSelectElement.innerHTML = states.map(state => {
+			return createOption(state.id, state.name)
+		})
+
+		statesSelectElement.addEventListener('change', async function () {
+			const cities = await fetchCities(this.value)
+
+			citiesSelectElement.innerHTML = cities.map(city => {
+				return createOption(city.id, city.name)
+			})
+		})
+	})
+})()

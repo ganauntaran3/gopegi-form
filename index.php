@@ -70,13 +70,13 @@ include "connection.php";
                             <div class="custom-control custom-radio custom-control-inline">
                                 <input type="radio" id="national_id" value="National ID" name="doc_type" class="custom-control-input" >
                                 <label class="custom-control-label" for="national_id"> National ID </label>
-                            </div> 
+                            </div>
                             <label id="error-doctype"></label>
                         </div>
 
                         <div class="form-group col-md-8">
                             <label class="form-control-label" for="doc_name">Upload your Passport/National ID</label>
-                            <div class="custom-file"> 
+                            <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="doc_name" lang="en" name="doc_name">
                                 <label class="custom-file-label" for="doc_name">Select file</label>
                             </div>
@@ -126,26 +126,21 @@ include "connection.php";
 
                     <div class="form-row">
                         <div class="form-group col-md-4">
-                            <label class="form-control-label" for="country_id">Country</label>
-                            <select onChange="change_state()" class="form-control" name="country" id="country_id">
-                            <option value="">Choose...</option>
-												<?php
-													$res = mysqli_query($c, "SELECT * FROM countries");
-													while($row=mysqli_fetch_array($res)){
-                                                    $countryId = $row['id'];
-                                                    $countryName = $row['name'];
-												?>
-												<option value="<?= $countryId; ?>"><?= $countryName; ?></option>
-
-													<?php } ?>
-                                            </select>
+                            <label class="form-control-label" for="countries">Country</label>
+                            <select
+                                id="countries"
+                                class="form-control"
+                                name="country"
+                                >
+                                <option value="">Choose...</option>
+                            </select>
                             <label id="error-country"></label>
                         </div>
 
                         <div class="form-group col-md-4">
                             <label class="form-control-label" for="state">State</label>
-                            <select class="form-control" name="state" id="state_id">
-                            <option value="">Default select</option>
+                            <select class="form-control" name="state" id="states">
+                                <option value="">Default select</option>
                             </select>
                             <label id="error-state"></label>
                         </div>
@@ -153,8 +148,8 @@ include "connection.php";
                         <div class="form-group col-md-4">
                             <label class="form-control-label" for="city_id">City</label>
                             <div class="state">
-                              <select class="form-control" name="city" id="city_id">
-                              <option value="">Default select</option>
+                              <select class="form-control" name="city" id="cities">
+                                  <option value="">Default select</option>
                               </select>
                               <label id="error-city"></label>
                             </div>
@@ -179,7 +174,9 @@ include "connection.php";
                       </div>
                     </div>
                   </div> -->
-                  <button class="btn btn-primary" type="submit">Submit</button>
+                  <div id="cta" class="d-flex flex-row align-items-center justify-content-end">
+                      <button class="btn btn-primary" type="submit">Submit</button>
+                  </div>
                 </form>
               </div>
             </div>
@@ -191,9 +188,38 @@ include "connection.php";
 <script src="./js/jquery.min.js"></script>
 <script src="./js/jquery.validate.min.js"></script>
 <script src="./js/jquery.validate-init.js"></script>
-<script src="script.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-<!-- Optional JS -->
+<script src="./js/argon.min9f1e.js?v=1.1.0"></script>
+<script src="./js/demo.min.js"></script>
+<script>
+  ! function(f, b, e, v, n, t, s) {
+    if (f.fbq) return;
+    n = f.fbq = function() {
+      n.callMethod ?
+        n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+    };
+    if (!f._fbq) f._fbq = n;
+    n.push = n;
+    n.loaded = !0;
+    n.version = '2.0';
+    n.queue = [];
+    t = b.createElement(e);
+    t.async = !0;
+    t.src = v;
+    s = b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t, s)
+  }(window,
+    document, 'script', '../../../../connect.facebook.net/en_US/fbevents.js');
+
+  try {
+    fbq('init', '111649226022273');
+    fbq('track', "PageView");
+
+  } catch (err) {
+    console.log('Facebook Track Error:', err);
+  }
+</script>
+<script src="./js/script.js"></script>
 
 <!-- <script>
 // Example starter JavaScript for disabling form submissions if there are invalid fields
@@ -215,40 +241,12 @@ include "connection.php";
       }, false);
     })();
   </script> -->
-  <!-- Argon JS -->
-  <script src="./js/argon.min9f1e.js?v=1.1.0"></script>
-  <!-- Demo JS - remove this in your project -->
-  <script src="./js/demo.min.js"></script>
-  <script>
-    // Facebook Pixel Code Don't Delete
-    ! function(f, b, e, v, n, t, s) {
-      if (f.fbq) return;
-      n = f.fbq = function() {
-        n.callMethod ?
-          n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-      };
-      if (!f._fbq) f._fbq = n;
-      n.push = n;
-      n.loaded = !0;
-      n.version = '2.0';
-      n.queue = [];
-      t = b.createElement(e);
-      t.async = !0;
-      t.src = v;
-      s = b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t, s)
-    }(window,
-      document, 'script', '../../../../connect.facebook.net/en_US/fbevents.js');
 
-    try {
-      fbq('init', '111649226022273');
-      fbq('track', "PageView");
-
-    } catch (err) {
-      console.log('Facebook Track Error:', err);
-    }
-  </script>
   <noscript>
-    <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=111649226022273&amp;ev=PageView&amp;noscript=1" />
+    <img
+        height="1"
+        width="1"
+        style="display:none"
+        src="https://www.facebook.com/tr?id=111649226022273&amp;ev=PageView&amp;noscript=1" />
   </noscript>
 </html>
