@@ -31,6 +31,6 @@ $bsc = $_POST["bsc_address"];
             if(!$result){
                 die ("Failed to added new data!".mysqli_errno($c)." - ".mysqli_error($c));
             } else {
-                echo "<script>alert('Your data successfully registrated.');</script>";
+                echo "<script>alert('Your data successfully registrated.');window.location.href='index.php';</script>";
             }
         }
