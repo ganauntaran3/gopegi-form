@@ -89,8 +89,8 @@ const fetchStates = countryId => {
 
 const addContactServiceBtn = () => {
 	const contactBtn = createContactService(
-		'https://t.me/Gana_11',
-		'Please Contact'
+		'https://t.me/contactName/text=Hello',
+		'Please Contact Corporate Secretary'
 	)
 
 	if (ctaElement.contains(contactBtn)) {
