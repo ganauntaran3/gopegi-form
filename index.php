@@ -127,8 +127,12 @@ include "connection.php";
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label class="form-control-label" for="countries">Country</label>
-                            <select id="countries" class="form-control" name="country">
-                                <option value="">Choose...</option>
+                            <select
+                                id="countries"
+                                class="form-control"
+                                name="country"
+                                >
+                                <option value="">Choose your country</option>
                             </select>
                             <label id="error-country"></label>
                         </div>
@@ -136,7 +140,7 @@ include "connection.php";
                         <div class="form-group col-md-4">
                             <label class="form-control-label" for="state">State</label>
                             <select class="form-control" name="state" id="states">
-                                <option value="">Choose...</option>
+                                <option value="">Choose your state</option>
                             </select>
                             <label id="error-state"></label>
                         </div>
@@ -145,7 +149,7 @@ include "connection.php";
                             <label class="form-control-label" for="city_id">City</label>
                             <div class="state">
                               <select class="form-control" name="city" id="cities">
-                                  <option value="">Choose...</option>
+                                  <option value="">Choose your city</option>
                               </select>
                               <label id="error-city"></label>
                             </div>

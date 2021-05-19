@@ -116,9 +116,12 @@ const removeContactServiceBtn = () => {
 	const countries = await fetchCountries()
 	const blackLists = await (await fetch('except.json')).json()
 
-	countriesSelectElement.innerHTML = countries.map(country => {
-		return createOption(country.id, country.name)
-	})
+	countriesSelectElement.innerHTML = [
+		createOption(null, 'Choose your country'),
+		...countries.map(country => {
+			return createOption(country.id, country.name)
+		}),
+	].join('')
 
 	countriesSelectElement.addEventListener('change', async function () {
 		if (blackLists.countries.includes(+this.value)) addContactServiceBtn()
@@ -126,16 +129,22 @@ const removeContactServiceBtn = () => {
 
 		const states = await fetchStates(this.value)
 
-		statesSelectElement.innerHTML = states.map(state => {
-			return createOption(state.id, state.name)
-		})
+		statesSelectElement.innerHTML = [
+			createOption(null, 'Choose your state'),
+			...states.map(state => {
+				return createOption(state.id, state.name)
+			}),
+		].join('')
 
 		statesSelectElement.addEventListener('change', async function () {
 			const cities = await fetchCities(this.value)
 
-			citiesSelectElement.innerHTML = cities.map(city => {
-				return createOption(city.id, city.name)
-			})
+			citiesSelectElement.innerHTML = [
+				createOption(null, 'Choose your city'),
+				...cities.map(city => {
+					return createOption(city.id, city.name)
+				}),
+			].join('')
 		})
 	})
 })()
